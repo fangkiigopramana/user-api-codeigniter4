@@ -8,7 +8,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 
-$routes->group('api', function($routes){
+$routes->group('/api', function($routes){
     $routes->get("/", function() {
         $response = service('response');
         return $response->setStatusCode(200)
