@@ -21,7 +21,21 @@ class User extends ResourceController
      */
     public function index()
     {
-        return $this->respond($this->model->findAll(),200);
+        return $this->respond(
+        [
+
+            "code"      => 200,
+            "message"   => "Get List User Successfully",
+            "data" => array_map(function ($item) {
+                return [
+                    'id' => $item['id'],
+                    'name' => $item['name'],
+                    'email' => $item['email'],
+                    'password' => $item['password']
+                ];
+            }, $this->model->findAll())
+        ], 200);
+        
     }
 
     /**
@@ -37,7 +51,16 @@ class User extends ResourceController
         if (is_null($user)) {
             $user = [];
         }
-        return $this->respond($user, 200);
+        return $this->respond(
+            [
+                "code"      => 200,
+                "message"   => "Get User Detail By ID Successfully",
+                "data"      => [
+                    "name" => $user['name'],
+                    "email" => $user['email'],
+                    "password" => $user['password'],
+                ]
+            ], 200);
     }
 
     /**
@@ -76,6 +99,7 @@ class User extends ResourceController
             $model->save($data);
              
             return $this->respond([
+                "code" => 200,
                 'message' => 'Create New User Successfully',
                 'data' => [
                         'name' => $data['name'],
@@ -113,6 +137,13 @@ class User extends ResourceController
      */
     public function update($id = null)
     {
+        if (is_null($this->model->find($id))){
+            return $this->respond([
+                "code" => 404,
+                "message" => "Update User Failed, Your ID User Not Found"
+            ], 404);
+        }
+        
         $data = [
             'name' => $this->request->getVar('name'),
             'email'   => $this->request->getVar('email'),
@@ -124,17 +155,15 @@ class User extends ResourceController
         ];
 
         if (!$this->validateData($data, $rules)){
-            $response = [
-                'message' => $this->validator->getErrors()
-            ];
-            return $this->failValidationErrors($response);
+            return $this->failValidationErrors($this->validator->getErrors());
         }
         $this->model->update($id, [
             'name'   => esc( $this->request->getVar('name')),
-            'email'         => esc( $this->request->getVar('email')),
+            'email'  => esc( $this->request->getVar('email')),
         ]);
 
         $response = [
+            "code" => 200,
             'message' => 'Update User Successfully'
         ];
 
@@ -151,6 +180,13 @@ class User extends ResourceController
      */
     public function delete($id = null)
     {
+        if (is_null($this->model->find($id))){
+            return $this->respond([
+                "code" => 404,
+               'message' => 'Delete User Failed, Your ID User Not Found'
+            ], 404);
+        }
+        
         $user = $this->model->delete($id);
         if (!$user) {
             $response = [

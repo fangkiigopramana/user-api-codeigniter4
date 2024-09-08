@@ -5,7 +5,7 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -31,30 +31,41 @@ class AuthFilter implements FilterInterface
         $key = getenv('jwt.secret');
         $header = $request->getHeaderLine("Authorization");
         $token = null;
-
-        if(!empty($header)) {
+    
+        // Mendapatkan token dari header Authorization
+        if (!empty($header)) {
             if (preg_match('/Bearer\s(\S+)/', $header, $matches)) {
                 $token = $matches[1];
             }
         }
-  
-        // check if token is null or empty
-        if(is_null($token) || empty($token)) {
+    
+        // Mengecek apakah token ada atau kosong
+        if (is_null($token) || empty($token)) {
             $response = service('response');
             $response->setBody('Access denied');
             $response->setStatusCode(401);
             return $response;
         }
-  
+    
         try {
-            // $decoded = JWT::decode($token, $key, array("HS256"));
+            // Melakukan decode token JWT
             $decoded = JWT::decode($token, new Key($key, 'HS256'));
+        } catch (ExpiredException $ex) {
+            // Jika token sudah expired
+            $response = service('response');
+            $response->setBody('Token expired');
+            $response->setStatusCode(401);
+            return $response;
         } catch (Exception $ex) {
+            // Jika token tidak valid atau kesalahan lainnya
             $response = service('response');
             $response->setBody('Access denied');
             $response->setStatusCode(401);
             return $response;
         }
+    
+        // Jika token valid, lanjutkan proses
+        return;  // Lanjut ke middleware berikutnya
     }
 
     /**
