@@ -5,7 +5,5 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
-$routes->post('/user', 'Home::createUser');
-
+$routes->get('/(:any)', 'Home::index');
 

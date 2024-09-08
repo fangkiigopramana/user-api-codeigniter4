@@ -7,7 +7,7 @@ use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
-class User extends ResourceController
+class Users extends ResourceController
 {
 
     protected $modelName = 'App\Models\User';
