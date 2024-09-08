@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/(:any)', function(){
+$routes->get('/', function(){
     $response = service('response');
         return $response->setStatusCode(200)
                         ->setJSON([
