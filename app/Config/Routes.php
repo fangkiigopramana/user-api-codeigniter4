@@ -12,13 +12,13 @@ $routes->get('/(:any)', function(){
                             'status' => 200,
                             'required' => 'JWT Token',
                             'message' => [
-                                'GET /users' => 'Get All User List',
-                                'GET /users/:id' => 'Get User Detail By Id',
-                                'POST /users' => 'Creat New User',
-                                'PATCH /users/:id' => 'Update User By Id',
-                                'DELETE /users/:id' => 'Delete User By Id',
-                                'POST /register' => 'Register Account',
-                                'POST /login' => 'Login Account And Get Token',
+                                'GET /api/users' => 'Get All User List',
+                                'GET /api/users/:id' => 'Get User Detail By Id',
+                                'POST /api/users' => 'Creat New User',
+                                'PATCH /api/users/:id' => 'Update User By Id',
+                                'DELETE /api/users/:id' => 'Delete User By Id',
+                                'POST /api/register' => 'Register Account',
+                                'POST /api/login' => 'Login Account And Get Token',
                             ]
 
                         ]);
